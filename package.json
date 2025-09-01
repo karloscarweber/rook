@@ -1,0 +1,28 @@
+{
+  "name": "rook",
+  "version": "0.0.1",
+  "description": "Rook is a simple language that compiles to WebAssembly.",
+  "keywords": [
+    "programming-language",
+    "web-assembly",
+    "compiler"
+  ],
+  "homepage": "https://github.com/karloscarweber/rook#readme",
+  "bugs": {
+    "url": "https://github.com/karloscarweber/rook/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karloscarweber/rook.git"
+  },
+  "devDependencies": {
+    "ohm-js": "^17.1.0"
+  },
+  "license": "MIT",
+  "author": "Karl Oscar Weber <me@kow.fm>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  }
+}
