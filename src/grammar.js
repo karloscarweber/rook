@@ -4,7 +4,7 @@ import * as ohm from 'ohm-js';
 
 const definition = String.raw`
   Rook {
-	Module = (FunctionDecl|ExternFunctionDecl)*
+	Module = (FunctionDecl|ExternFunctionDecl|TypeDecl)*
 
 	Statement = LetStatement
 			  | IfStatement
@@ -23,12 +23,21 @@ const definition = String.raw`
 	//- "while 1 { 42 }", "while x < 10 { x := x + 1 }"
 	WhileStatement = while Expr BlockStatements
 
-	//+ "func zero() { 0 }", "func add(x, y) { x + y }"
+	//+ "func zero(): i32 { 0 }", "func add(x, y): i64 { x + y }"
 	//- "func x", "func x();"
-	FunctionDecl = func identifier "(" Params? ")" BlockExpr
+	FunctionDecl = func identifier "(" Params? ")" ":" identifier BlockExpr
 
 	//+ "extern func print(x);"
 	ExternFunctionDecl = extern func identifier "(" Params? ")" ";"
+
+	//+ "String : (u32);"
+	//+ "pointer: (u32);"
+	//+ "tuple: (i32, i32);"
+	//- "age (i32);"
+	//- "slash ( )"
+	//+ "morning: (i32, u32, f64);"
+	//- "night: (i32, u32, );"
+	TypeDecl = identifier ":" "(" Params? ")" ";"
 
 	Params = identifier ("," identifier)*
 
@@ -71,7 +80,7 @@ const definition = String.raw`
 	logicalOp = and | or
 	number = digit+
 
-	keyword = if | else | func | let | while | and | or | extern
+	keyword = if | else | func | let | while | and | or | extern | type
 	if = "if" ~identPart
 	else = "else" ~identPart
 	func = "func" ~identPart
@@ -80,6 +89,7 @@ const definition = String.raw`
 	and = "and" ~identPart
 	or = "or" ~identPart
 	extern = "extern" ~identPart
+	type = "type" ~identPart
 
 	//+ "x", "élan", "_", "_99"
 	//- "1", "$nope"
@@ -95,7 +105,7 @@ const definition = String.raw`
 	multiLineComment = "/*" (~"*/" any)* "*/"
 
 	// Examples:
-	//+ "func addOne(x) { x + one }", "func one() { 1 } func two() { 2 }"
+	//+ "func addOne(x): i32 { x + one }", "func one():i64 { 1 } func two():u32 { 2 }"
 	//- "42", "let x", "func x {}"
   }
 `;
