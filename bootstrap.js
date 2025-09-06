@@ -5,8 +5,9 @@
 import { makeTestFn } from './lib/test_helper.js';
 const test = makeTestFn(import.meta.url);
 
-test('does this work?', async() => {
-	console.log("it better");
-});
+// test('Bootstrap loads', async() => {
+console.log("--- Rook ---");
+// });
 
 import * as grammar_tests from './test/grammar_test.js'
+import * as small_compiler_tests from './test/small_compiler_test.js';
