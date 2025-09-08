@@ -8,7 +8,7 @@ import * as grammar from '../src/grammar.js';
 
 const test = makeTestFn(import.meta.url);
 
-test('Rook Extracted grammar examples', async() => testExtractedExamples(grammar.definition));
+test('Rook Extracted grammar examples', async() => testExtractedExamples(grammar.strict));
 
 test('Rook Top Level declarations', () => {
 	assert.ok(grammar.rook.match(`This is some bullshit`).failed());
@@ -24,14 +24,18 @@ test('Rook Top Level declarations', () => {
 	assert.ok(grammar.rook.match(`"This sucks"`).failed());
 
 	// function declarations
-	assert.ok(grammar.rook.match(`
-		func zero() {
-			0
-		}
-		func add(x, y) {
-			x + y
-		}
-		`));
+	const matchR = grammar.rook.match(`
+	func zero(): i32 {
+		0
+	}
+	func add(x, y): i32 {
+		x + y
+	}
+	`);
+	if (matchR.failed() == true) {
+		console.log(matchR.message);
+	}
+	assert.ok(matchR.succeeded());
 
 	// external function declarations
 	assert.ok(grammar.rook.match(`
@@ -39,36 +43,62 @@ test('Rook Top Level declarations', () => {
 		extern func print(x);
 		extern func do_something();
 		extern func stop_thread(x,y);
-		`));
+		`).succeeded());
 });
 
 test('Rook Statements', () => {
-	assert.ok(grammar.rook.match(`
-		let name = "Jim";
-		let age = 19;
-		`));
-
-	assert.ok(grammar.rook.match(`
-		if (5 == 5) {
-			print(90);
+	const matchR = grammar.rook.match(`
+		func start(): void {
+			let name = "Jim";
+			let age = 19;
+			19
 		}
-		`));
+		`);
+	if (matchR.failed() == true) {
+		console.log(matchR.message);
+	}
+	assert.ok(matchR.succeeded());
+
+	const matchR2 = grammar.rook.match(`
+		func start(): void {
+			if (5 == 5) {
+				print(90);
+			}
+		}
+		`);
+	if (matchR2.failed() == true) {
+		console.log(matchR2.message);
+	}
+	assert.ok(matchR2.succeeded());
 
 		//+ "while 0 {}", "while x < 10 { x := x + 1; }"
 	assert.ok(grammar.rook.match(`
-		while 0 {}
-		while x < 10 {
-			x := x + 1;
+		func start(): void {
+			while 0 {}
+			while x < 10 {
+				x := x + 1;
+			}
 		}
-		`));
+		`).succeeded());
 
 	assert.ok(grammar.rook.match(`
-		x := 3;
-		y := 2 + 1;
-		arr[x + 1] := 3;
-		`));
+		func start(): void {
+			x := 3;
+			y := 2 + 1;
+			arr[x + 1] := 3;
+		}
+		`).succeeded());
 });
 
 // test('Rook Expressions', () => {
 //
 // })
+
+// Test looseGrammar
+test('Loose Rook Extracted grammar examples', async() => testExtractedExamples(grammar.loose));
+test('Test loose Rook Grammar', () => {
+	assert.ok(grammar.rookLoose.match(`
+		morning: i32, u32, f64);
+		morning (i32, u32, f64)
+	`).failed());
+});
