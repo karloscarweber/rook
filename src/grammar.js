@@ -1,5 +1,4 @@
 // grammar.js
-import assert from 'node:assert';
 import * as ohm from 'ohm-js';
 
 const definition = String.raw`
