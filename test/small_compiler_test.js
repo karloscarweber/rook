@@ -112,6 +112,8 @@ test('Build Types List, rejecting duplicates', async () => {
 		i32: ();
 		Nostromo: (i32);
 		`);
+	assert.ok(rook.match('i32: (i32, u32);').succeeded());
+	assert.ok(rook.match('i32: (i32, u32)').failed());
 	const types = sc.buildTypesList(rook, matchResult);
 
 	const mmap = new Map()
@@ -122,6 +124,24 @@ test('Build Types List, rejecting duplicates', async () => {
 		mmap.set('String', {types: [ 'u32' ]})
 		mmap.set('Maginot', {types: [ 'i32' ]})
 		mmap.set('Nostromo', {types: [ 'i32' ]})
-	assert.deepEqual(types, mmap);
-	// console.log(types)
+	assert.deepEqual(types[0], mmap);
+});
+
+test('Protect against Type redeclarations, and begin a little error reporting', async () => {
+	const matchResult2 = rook.match(`
+		i32: (i32, u32)
+		i32: (i32, u32)
+		`);
+	assert.ok(matchResult2.failed());
+
+	// here we're going to inspect the errors that we got from
+	// the failed parsing, and generate an error list with suggestions
+	// on how to fix it.
+	if (matchResult2.failed() == true) {
+		console.log(matchResult2.shortMessage)
+		console.log(matchResult2.message)
+		console.log(matchResult2.getRightmostFailures())
+	}
+	// if matchResult.succeeded();
+	// const types = sc.buildTypesList(rook, matchResult2);
 });

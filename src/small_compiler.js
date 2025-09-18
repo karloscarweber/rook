@@ -99,8 +99,7 @@ function buildPreludeTypes() {
 	return types
 }
 
-// builds a symbolTable. What is that?
-// well
+// builds a list of types, reports errors when we can. What is that?
 function buildTypesList(grammar, matchResult) {
 	const tempSemantics = grammar.createSemantics();
 	const types = buildPreludeTypes();
@@ -141,7 +140,7 @@ function buildTypesList(grammar, matchResult) {
 		}
 	});
 	tempSemantics(matchResult).buildTypesList();
-	return types;
+	return [types, errors];
 }
 
 
