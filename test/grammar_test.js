@@ -2,8 +2,11 @@
 import {
 	makeTestFn,
 	testExtractedExamples,
+	testExtractedExamplesFromConcatenatedGrammars,
 	assert
 } from '../lib/test_helper.js';
+import * as ohm from 'ohm-js';
+import {extractExamples} from 'ohm-js/extras';
 import * as grammar from '../src/grammar.js';
 
 const test = makeTestFn(import.meta.url);
@@ -95,10 +98,29 @@ test('Rook Statements', () => {
 // })
 
 // Test looseGrammar
-test('Loose Rook Extracted grammar examples', async() => testExtractedExamples(grammar.loose));
+// test('Loose Rook Extracted grammar examples', async() => {
+	// const grammar = ohm.grammar(grammarSource);
+	// for (const ex of extractExamples(grammarSource)) {
+	// 	const result = grammar.match(ex.example, ex.rule);
+	// 	assert.strictEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
+	// }
+// })
+
+// testExtractedExamples(grammar.loose));
+// test('Rook Extracted grammar examples', async() => testExtractedExamplesFromConcatenatedGrammars();
+
+test('Crook!', async() => {
+	const grammarSource = grammar.strict.concat(grammar.loose);
+	const crook = ohm.grammars(grammarSource).Crook
+	for (const ex of extractExamples(grammarSource)) {
+		const result = crook.match(ex.example, ex.rule);
+		assert.strictEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
+	}
+})
+
 test('Test loose Rook Grammar', () => {
-	assert.ok(grammar.rookLoose.match(`
+	assert.ok(grammar.crook.match(`
 		morning: i32, u32, f64);
 		morning (i32, u32, f64)
-	`).failed());
+	`).succeeded());
 });
