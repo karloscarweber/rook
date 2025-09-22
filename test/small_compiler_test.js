@@ -1,13 +1,6 @@
 // small_compiler_test.js
-import {
-	makeTestFn,
-	testExtractedExamples,
-	assert
-} from '../lib/test_helper.js';
-import * as small_compiler from '../src/small_compiler.js';
-const sc = small_compiler;
-
-const test = makeTestFn(import.meta.url);
+import test from 'ava';
+import * as sc from '../src/small_compiler.js';
 
 // nopLangBytes
 // nopLag will only be here for a little bit to bootstrap
@@ -71,35 +64,35 @@ function compileNopLang(source) {
 	return Uint8Array.from(mod.flat(Infinity));
 }
 
-test('Compiles an empty program', async () => {
+test('Compiles an empty program', async t => {
 	const bytes = compileVoidLang('');
 	const {instance, module} = await WebAssembly.instantiate(
 		compileVoidLang(''),
 	);
 
-	assert.strictEqual(instance instanceof WebAssembly.Instance, true);
-	assert.strictEqual(module instanceof WebAssembly.Module, true);
-})
+	t.deepEqual(instance instanceof WebAssembly.Instance, true);
+	t.deepEqual(module instanceof WebAssembly.Module, true);
+});
 
-test('hand crafted module with a function', async () => {
+test('hand crafted module with a function', async t => {
 	const {instance, module} = await WebAssembly.instantiate(
 		Uint8Array.from(nopLangBytes),
 	);
 
-	assert.strictEqual(instance instanceof WebAssembly.Instance, true);
-	assert.strictEqual(module instanceof WebAssembly.Module, true);
+	t.deepEqual(instance instanceof WebAssembly.Instance, true);
+	t.deepEqual(module instanceof WebAssembly.Module, true);
 });
 
-test('compiledNopLang compiles to a wasm module', async () => {
+test('compiledNopLang compiles to a wasm module', async t => {
   const {instance} = await WebAssembly.instantiate(compileNopLang(''));
 
-  assert.strictEqual(instance.exports.main(), undefined);
-  assert.throws(() => compileNopLang('42'));
+  t.deepEqual(instance.exports.main(), undefined);
+  t.throws(() => compileNopLang('42'));
 });
 
 const rook = sc.grammar.rook;
 
-test('Build Types List, rejecting duplicates', async () => {
+test('Build Types List, rejecting duplicates', async t => {
 	const matchResult = rook.match(`
 		i32: (i32, u32);
 		String: (u32);
@@ -112,8 +105,8 @@ test('Build Types List, rejecting duplicates', async () => {
 		i32: ();
 		Nostromo: (i32);
 		`);
-	assert.ok(rook.match('i32: (i32, u32);').succeeded());
-	assert.ok(rook.match('i32: (i32, u32)').failed());
+	t.assert(rook.match('i32: (i32, u32);').succeeded());
+	t.assert(rook.match('i32: (i32, u32)').failed());
 	const types = sc.buildTypesList(rook, matchResult);
 
 	const mmap = new Map()
@@ -124,15 +117,15 @@ test('Build Types List, rejecting duplicates', async () => {
 		mmap.set('String', {types: [ 'u32' ]})
 		mmap.set('Maginot', {types: [ 'i32' ]})
 		mmap.set('Nostromo', {types: [ 'i32' ]})
-	assert.deepEqual(types[0], mmap);
+	t.deepEqual(types[0], mmap);
 });
 
-test('Protect against Type redeclarations, and begin a little error reporting', async () => {
+test('Protect against Type redeclarations, and begin a little error reporting', async t => {
 	const matchResult2 = rook.match(`
 		i32: (i32, u32)
 		i32: (i32, u32)
 		`);
-	assert.ok(matchResult2.failed());
+	t.assert(matchResult2.failed());
 
 	// here we're going to inspect the errors that we got from
 	// the failed parsing, and generate an error list with suggestions

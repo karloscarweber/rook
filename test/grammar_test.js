@@ -1,30 +1,26 @@
 // grammar_test.js
-import {
-	makeTestFn,
-	testExtractedExamples,
-	testExtractedExamplesFromConcatenatedGrammars,
-	assert
-} from '../lib/test_helper.js';
+import test from 'ava';
+import { testExtractedExamples } from '../lib/test_helper.js';
 import * as ohm from 'ohm-js';
-import {extractExamples} from 'ohm-js/extras';
+import { extractExamples } from 'ohm-js/extras';
 import * as grammar from '../src/grammar.js';
 
-const test = makeTestFn(import.meta.url);
+test('Rook Extracted grammar examples', async t => {
+	testExtractedExamples(t, grammar.strict)
+});
 
-test('Rook Extracted grammar examples', async() => testExtractedExamples(grammar.strict));
-
-test('Rook Top Level declarations', () => {
-	assert.ok(grammar.rook.match(`This is some bullshit`).failed());
-	assert.ok(grammar.rook.match(`15`).failed());
+test('Rook Top Level declarations', t => {
+	t.assert(grammar.rook.match(`This is some bullshit`).failed());
+	t.assert(grammar.rook.match(`15`).failed());
 
 	// Type declarations
-	assert.ok(grammar.rook.match(`
+	t.assert(grammar.rook.match(`
 		i32: (i32);
 		String: (u32);
 		Maginot: (i32);
 		Nostromo: (i32);
 		`).succeeded());
-	assert.ok(grammar.rook.match(`"This sucks"`).failed());
+	t.assert(grammar.rook.match(`"This sucks"`).failed());
 
 	// function declarations
 	const matchR = grammar.rook.match(`
@@ -38,10 +34,10 @@ test('Rook Top Level declarations', () => {
 	if (matchR.failed() == true) {
 		console.log(matchR.message);
 	}
-	assert.ok(matchR.succeeded());
+	t.assert(matchR.succeeded());
 
 	// external function declarations
-	assert.ok(grammar.rook.match(`
+	t.assert(grammar.rook.match(`
 		extern func console_log(x);
 		extern func print(x);
 		extern func do_something();
@@ -49,7 +45,7 @@ test('Rook Top Level declarations', () => {
 		`).succeeded());
 });
 
-test('Rook Statements', () => {
+test('Rook Statements', t => {
 	const matchR = grammar.rook.match(`
 		func start(): void {
 			let name = "Jim";
@@ -60,7 +56,7 @@ test('Rook Statements', () => {
 	if (matchR.failed() == true) {
 		console.log(matchR.message);
 	}
-	assert.ok(matchR.succeeded());
+	t.assert(matchR.succeeded());
 
 	const matchR2 = grammar.rook.match(`
 		func start(): void {
@@ -72,10 +68,10 @@ test('Rook Statements', () => {
 	if (matchR2.failed() == true) {
 		console.log(matchR2.message);
 	}
-	assert.ok(matchR2.succeeded());
+	t.assert(matchR2.succeeded());
 
 		//+ "while 0 {}", "while x < 10 { x := x + 1; }"
-	assert.ok(grammar.rook.match(`
+	t.assert(grammar.rook.match(`
 		func start(): void {
 			while 0 {}
 			while x < 10 {
@@ -84,7 +80,7 @@ test('Rook Statements', () => {
 		}
 		`).succeeded());
 
-	assert.ok(grammar.rook.match(`
+	t.assert(grammar.rook.match(`
 		func start(): void {
 			x := 3;
 			y := 2 + 1;
@@ -93,12 +89,12 @@ test('Rook Statements', () => {
 		`).succeeded());
 });
 
-// test('Rook Expressions', () => {
+// test('Rook Expressions', t => {
 //
 // })
 
 // Test looseGrammar
-// test('Loose Rook Extracted grammar examples', async() => {
+// test('Loose Rook Extracted grammar examples', async t => {
 	// const grammar = ohm.grammar(grammarSource);
 	// for (const ex of extractExamples(grammarSource)) {
 	// 	const result = grammar.match(ex.example, ex.rule);
@@ -106,20 +102,17 @@ test('Rook Statements', () => {
 	// }
 // })
 
-// testExtractedExamples(grammar.loose));
-// test('Rook Extracted grammar examples', async() => testExtractedExamplesFromConcatenatedGrammars();
-
-test('Crook!', async() => {
+test('Crook!', async t => {
 	const grammarSource = grammar.strict.concat(grammar.loose);
 	const crook = ohm.grammars(grammarSource).Crook
 	for (const ex of extractExamples(grammarSource)) {
 		const result = crook.match(ex.example, ex.rule);
-		assert.strictEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
+		t.deepEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
 	}
 })
 
-test('Test loose Rook Grammar', () => {
-	assert.ok(grammar.crook.match(`
+test('Test loose Rook Grammar', t => {
+	t.assert(grammar.crook.match(`
 		morning: i32, u32, f64);
 		morning (i32, u32, f64)
 	`).succeeded());

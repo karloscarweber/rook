@@ -16,6 +16,7 @@
     "url": "git+https://github.com/karloscarweber/rook.git"
   },
   "devDependencies": {
+    "ava": "^6.4.1",
     "ohm-js": "^17.1.0"
   },
   "license": "MIT",
@@ -23,6 +24,6 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "ava"
   }
 }
