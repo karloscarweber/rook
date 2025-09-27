@@ -115,20 +115,25 @@ const loose = String.raw`
 	Crook <: Rook {
 		// Module := (FunctionDecl|ExternFunctionDecl|TypeDecl)*
 
-		//+ "String : (u32);"
-		//+ "pointer: (u32);"
-		//+ "tuple: (i32, i32);"
-		//- "age (i32);"
+		//+ "String : (u32)\n"
+		//+ "pointer: (u32)\n"
+		//+ "tuple: (i32, i32)\n"
+		//- "age (i32)\n"
 		//- "slash ( )"
-		//+ "morning: (i32, u32, f64);"
-		//- "night: (i32, u32, );"
-		TypeDecl := TDStart TDBody
+		//+ "morning: (i32, u32, f64)\n"
+		//- "night: (i32, u32, )\n"
+		TypeDecl := TDStart TDBody "\n"
 			TDStart = identifier ":"
-			TDBody = "(" Params? ")" ";" -- goodBody
-				   | TDBadBody -- badBody
-			TDBadBody = ~"(" AnyNotNL -- noLeftParam
+			TDBody = "(" Params? ")" -- goodBody
+				   | ~"(" (~"\n" any)* -- missingParen
+				   | "(" ~identifier (~"\n" any)* -- badBody
+		//+ "evening: (i32, u32)\n"
+		TypeDeclNoSemi = TDStart TDBody (~";" any)*
 
-		AnyNotNL = (~"\n" any)*
+		// Utilities
+		// AnyNotNL = (~"\n" any)*
+
+		// Params = identifier ("," identifier)*
 
 		// BadTD
 			// TDErrorMissingType = (~"\n" space)* ","

@@ -15,10 +15,10 @@ test('Rook Top Level declarations', t => {
 
 	// Type declarations
 	t.assert(grammar.rook.match(`
-		i32: (i32);
-		String: (u32);
-		Maginot: (i32);
-		Nostromo: (i32);
+		i32: (i32)
+		String: (u32)
+		Maginot: (i32)
+		Nostromo: (i32)
 		`).succeeded());
 	t.assert(grammar.rook.match(`"This sucks"`).failed());
 
@@ -109,11 +109,18 @@ test('Crook!', async t => {
 		const result = crook.match(ex.example, ex.rule);
 		t.deepEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
 	}
-})
+
+	t.assert(crook.match(`
+		morning: i32, u32, f64)
+		morning (i32, u32, f64)
+	`).succeeded())
+});
 
 test('Test loose Rook Grammar', t => {
-	t.assert(grammar.crook.match(`
-		morning: i32, u32, f64);
+	const matchResult = grammar.crook.match(`
+		morning: i32, u32, f64)
 		morning (i32, u32, f64)
-	`).succeeded());
+		whatever: i32)
+	`)
+	t.assert(matchResult.succeeded());
 });

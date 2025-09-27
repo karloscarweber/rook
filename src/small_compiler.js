@@ -105,10 +105,17 @@ function buildTypesList(grammar, matchResult) {
 	const types = buildPreludeTypes();
 	const errors = [];
 
-	function flagError(key, thing) {
-		// console.log("type already exists");
-		console.log(key);
-		console.log(thing);
+	// flagError:
+	// flags a type redeclaration error.
+	function flagError(key, info) {
+		let str = "(";
+		let prefix = "";
+		info.types.map((c) => {
+			str = str.concat(`${prefix}${c}`);
+			prefix = ", ";
+		})
+		str = str.concat(")");
+		// console.log(`Type already exists:\n  ${key}: ${str};\n`);
 	}
 
 	// const scopes = [new Map()];
@@ -142,7 +149,6 @@ function buildTypesList(grammar, matchResult) {
 	tempSemantics(matchResult).buildTypesList();
 	return [types, errors];
 }
-
 
 export {
 	grammar,

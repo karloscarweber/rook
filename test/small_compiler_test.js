@@ -1,6 +1,8 @@
 // small_compiler_test.js
 import test from 'ava';
 import * as sc from '../src/small_compiler.js';
+import * as cc from '../src/crook_compiler.js';
+import * as errors from '../src/error/index.js';
 
 // nopLangBytes
 // nopLag will only be here for a little bit to bootstrap
@@ -93,18 +95,17 @@ test('compiledNopLang compiles to a wasm module', async t => {
 const rook = sc.grammar.rook;
 
 test('Build Types List, rejecting duplicates', async t => {
-	const matchResult = rook.match(`
-		i32: (i32, u32);
-		String: (u32);
-		Maginot: (i32);
-		Nostromo: (i32);
-		i32: ();
-		i32: ();
-		i32: ();
-		Maginot: (i32);
-		i32: ();
-		Nostromo: (i32);
-		`);
+	const matchResult = rook.match(`i32: (i32, u32);
+String: (u32);
+Maginot: (i32);
+Nostromo: (i32);
+i32: ();
+i32: ();
+i32: ();
+Maginot: (i32);
+i32: ();
+Nostromo: (i32);
+`);
 	t.assert(rook.match('i32: (i32, u32);').succeeded());
 	t.assert(rook.match('i32: (i32, u32)').failed());
 	const types = sc.buildTypesList(rook, matchResult);
@@ -131,10 +132,46 @@ test('Protect against Type redeclarations, and begin a little error reporting', 
 	// the failed parsing, and generate an error list with suggestions
 	// on how to fix it.
 	if (matchResult2.failed() == true) {
-		console.log(matchResult2.shortMessage)
-		console.log(matchResult2.message)
-		console.log(matchResult2.getRightmostFailures())
+		// console.log(matchResult2.shortMessage)
+		// console.log(matchResult2.message)
+		// console.log(matchResult2.getRightmostFailures())
 	}
 	// if matchResult.succeeded();
 	// const types = sc.buildTypesList(rook, matchResult2);
+});
+
+const crook = sc.grammar.crook;
+
+test('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
+	const program = String.raw`dude: (i32, u32);
+whatever: i32);
+nope: (i32);
+nope: i32);
+whatever: (55);
+`
+	const matchResult2 = rook.match(program);
+	t.assert(matchResult2.failed());
+
+	if (matchResult2.failed()) {
+		console.log("switch to crook");
+		const matchResult3 = crook.match(program);
+		t.assert(matchResult3.succeeded());
+
+		const types = cc.buildTypesList(crook, matchResult3);
+		t.deepEqual(types.at(0).get("dude").get("types"), ['i32', 'u32']);
+
+		// get errors
+		let errors = types.at(1);
+		for (const errs of errors) {
+			console.log("")
+			for (const err of errs) {
+				console.log(err)
+			}
+			console.log("")
+		}
+
+		// console.log(types.at(1));
+
+	}
+
 });
