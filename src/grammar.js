@@ -29,7 +29,7 @@ const strict = String.raw`
 	//+ "extern func print(x);"
 	ExternFunctionDecl = extern func identifier "(" Params? ")" ";"
 
-	//+ "String : (u32);"
+	//+ "String: (u32);"
 	//+ "pointer: (u32);"
 	//+ "tuple: (i32, i32);"
 	//- "age (i32);"
@@ -113,38 +113,41 @@ const rook = ohm.grammar(strict);
 
 const loose = String.raw`
 	Crook <: Rook {
-		// Module := (FunctionDecl|ExternFunctionDecl|TypeDecl)*
+		Module := (FunctionDecl|ExternFunctionDecl|AllTypeDecls)*
 
-		//+ "String : (u32)\n"
-		//+ "pointer: (u32)\n"
-		//+ "tuple: (i32, i32)\n"
-		//- "age (i32)\n"
+		AllTypeDecls = (TypeDecl
+			|TypeDeclNoLeftParen
+			|TypeDeclNoRightParen
+			|TypeDeclNoColo
+			|TypeDeclNoSemi)
+
+		//+ "String : (u32);"
+		//+ "pointer: (u32);"
+		//+ "tuple: (i32, i32);"
+		//- "age (i32);"
 		//- "slash ( )"
-		//+ "morning: (i32, u32, f64)\n"
-		//- "night: (i32, u32, )\n"
-		TypeDecl := TDStart TDBody "\n"
+		//+ "morning: (i32, u32, f64);"
+		//- "night: (i32, u32, );"
+		//- "day: i32, u32);"
+		//- "night: (i32, u32;"
+		TypeDecl := TDStart "(" Params? ")" ";"
 			TDStart = identifier ":"
-			TDBody = "(" Params? ")" -- goodBody
-				   | ~"(" (~"\n" any)* -- missingParen
-				   | "(" ~identifier (~"\n" any)* -- badBody
-		//+ "evening: (i32, u32)\n"
-		TypeDeclNoSemi = TDStart TDBody (~";" any)*
 
-		// Utilities
-		// AnyNotNL = (~"\n" any)*
+		//+ "day: i32, u32);"
+		//- "day: (i32, u32);"
+		TypeDeclNoLeftParen = TDStart Params? ")" ";"
 
-		// Params = identifier ("," identifier)*
+		//+ "night: (i32, u32;"
+		//- "night: (i32, i32);"
+		TypeDeclNoRightParen = TDStart "(" Params? ";"
 
-		// BadTD
-			// TDErrorMissingType = (~"\n" space)* ","
+		//+ "evening (i32, u32);"
+		//- "evening: (i32, u32);"
+		TypeDeclNoColo = identifier ~":" "(" Params? ")" ";"
 
-	// PrimaryExpr = "(" Expr ")"  -- paren
-	// 		| number
-	// 		| stringLiteral
-	// 		| CallExpr
-	// 		| identifier "[" Expr "]"  -- index
-	// 		| identifier  -- var
-	// 		| IfExpr
+		//+ "evening: (i32, u32)"
+		//- "evening: (i32, u32);"
+		TypeDeclNoSemi = TDStart "(" Params? ")" (~";" any)*
 
 	}
 `;

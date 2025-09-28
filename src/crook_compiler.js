@@ -60,11 +60,6 @@ function buildTypesList(grammar, matchResult) {
 		_default(...children) {
 			return children.forEach((c) => c.buildTypesList());
 		},
-		TypeDeclNoSemi(tdstart, tbody, _any) {
-			const errorString = grabErrorString(_any);
-			errors.push([`missing semicolon.`, errorString]);
-			return undefined;
-		},
 		TypeDecl(tdstart, tdbody, _nl) {
 			const type_name = tdstart.buildTypesList();
 			const internal_types = tdbody.buildTypesList();
@@ -77,17 +72,33 @@ function buildTypesList(grammar, matchResult) {
 			lastType = name.sourceString;
 			return lastType;
 		},
-		TDBody_goodBody(_lparen, optArgs, _rparen, _semicolon) {
+		TDBody_goodBody(_lparen, optArgs, _rparen) {
 			const children = optArgs.child(0)?.buildTypesList();
 			return children;
 		},
-		TDBody_missingParen(_iterAny) {
-			const errorString = grabErrorString(_iterAny);
-			errors.push([`missing paren.`, errorString]);
+		TDBody_missingLeftParen(_lparen, _iterAny, _rparen) {
+			const errorString = grabErrorString(_lparen);
+			errors.push([`missing left paren.`, errorString]);
 			return undefined;
 		},
-		TDBody_badBody(_paren, _iterAny) {
-			errors.push([`expecting identifier on line: ${lineNumber} `]);
+		TDBody_missingRightParen(_lparen, _iterAny, _rparen) {
+			const errorString = grabErrorString(_rparen);
+			errors.push([`missing right paren.`, errorString]);
+			return undefined;
+		},
+		// TDBody_badBody(_paren, _iterAny) {
+		// 	errors.push([`expecting identifier on line: ${lineNumber} `]);
+		// 	return undefined;
+		// },
+
+		TypeDeclNoColo(_ident, _lpar, _itparams, _rpar, _semi) {
+			const errorString = grabErrorString(_lpar);
+			errors.push([`missing colon.`, errorString]);
+			return undefined;
+		},
+		TypeDeclNoSemi(tdstart, tbody, _any) {
+			const errorString = grabErrorString(_any);
+			errors.push([`missing semicolon.`, errorString]);
 			return undefined;
 		},
 		Params(ident, _, iterIdent) {

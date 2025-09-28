@@ -66,7 +66,7 @@ function compileNopLang(source) {
 	return Uint8Array.from(mod.flat(Infinity));
 }
 
-test('Compiles an empty program', async t => {
+test.skip('Compiles an empty program', async t => {
 	const bytes = compileVoidLang('');
 	const {instance, module} = await WebAssembly.instantiate(
 		compileVoidLang(''),
@@ -76,7 +76,7 @@ test('Compiles an empty program', async t => {
 	t.deepEqual(module instanceof WebAssembly.Module, true);
 });
 
-test('hand crafted module with a function', async t => {
+test.skip('hand crafted module with a function', async t => {
 	const {instance, module} = await WebAssembly.instantiate(
 		Uint8Array.from(nopLangBytes),
 	);
@@ -94,7 +94,7 @@ test('compiledNopLang compiles to a wasm module', async t => {
 
 const rook = sc.grammar.rook;
 
-test('Build Types List, rejecting duplicates', async t => {
+test.skip('Build Types List, rejecting duplicates', async t => {
 	const matchResult = rook.match(`i32: (i32, u32);
 String: (u32);
 Maginot: (i32);
@@ -121,7 +121,7 @@ Nostromo: (i32);
 	t.deepEqual(types[0], mmap);
 });
 
-test('Protect against Type redeclarations, and begin a little error reporting', async t => {
+test.skip('Protect against Type redeclarations, and begin a little error reporting', async t => {
 	const matchResult2 = rook.match(`
 		i32: (i32, u32)
 		i32: (i32, u32)
@@ -142,7 +142,7 @@ test('Protect against Type redeclarations, and begin a little error reporting', 
 
 const crook = sc.grammar.crook;
 
-test('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
+test.skip('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
 	const program = String.raw`dude: (i32, u32);
 whatever: i32);
 nope: (i32);

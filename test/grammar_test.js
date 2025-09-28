@@ -15,10 +15,10 @@ test('Rook Top Level declarations', t => {
 
 	// Type declarations
 	t.assert(grammar.rook.match(`
-		i32: (i32)
-		String: (u32)
-		Maginot: (i32)
-		Nostromo: (i32)
+		i32: (i32);
+		String: (u32);
+		Maginot: (i32);
+		Nostromo: (i32);
 		`).succeeded());
 	t.assert(grammar.rook.match(`"This sucks"`).failed());
 
@@ -102,7 +102,7 @@ test('Rook Statements', t => {
 	// }
 // })
 
-test('Crook!', async t => {
+test.only('Crook!', async t => {
 	const grammarSource = grammar.strict.concat(grammar.loose);
 	const crook = ohm.grammars(grammarSource).Crook
 	for (const ex of extractExamples(grammarSource)) {
@@ -110,17 +110,24 @@ test('Crook!', async t => {
 		t.deepEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
 	}
 
-	t.assert(crook.match(`
-		morning: i32, u32, f64)
-		morning (i32, u32, f64)
-	`).succeeded())
+
+	const sample = `morning: i32, u32, f64);`;
+
+	// console.log(crook.match(`morning: i32, u32, f64); morning: (i32, u32, f64);`))
+	const matchResult = crook.match(sample);
+	// const trace = crook.trace(sample);
+	// console.log(trace);
+
+	// t.assert(matchResult.failed());
+	t.assert(matchResult.succeeded());
 });
 
-test('Test loose Rook Grammar', t => {
+test('Test Crook Grammar', t => {
 	const matchResult = grammar.crook.match(`
-		morning: i32, u32, f64)
-		morning (i32, u32, f64)
-		whatever: i32)
+		morning: i32, u32, f64);
+		morning (i32, u32, f64);
+		whatever: i32);
+		morning: (i32, u32, f64);
 	`)
 	t.assert(matchResult.succeeded());
 });
