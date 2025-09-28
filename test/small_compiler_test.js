@@ -66,7 +66,7 @@ function compileNopLang(source) {
 	return Uint8Array.from(mod.flat(Infinity));
 }
 
-test.skip('Compiles an empty program', async t => {
+test('Compiles an empty program', async t => {
 	const bytes = compileVoidLang('');
 	const {instance, module} = await WebAssembly.instantiate(
 		compileVoidLang(''),
@@ -76,7 +76,7 @@ test.skip('Compiles an empty program', async t => {
 	t.deepEqual(module instanceof WebAssembly.Module, true);
 });
 
-test.skip('hand crafted module with a function', async t => {
+test('hand crafted module with a function', async t => {
 	const {instance, module} = await WebAssembly.instantiate(
 		Uint8Array.from(nopLangBytes),
 	);
@@ -94,7 +94,7 @@ test('compiledNopLang compiles to a wasm module', async t => {
 
 const rook = sc.grammar.rook;
 
-test.skip('Build Types List, rejecting duplicates', async t => {
+test('Build Types List, rejecting duplicates', async t => {
 	const matchResult = rook.match(`i32: (i32, u32);
 String: (u32);
 Maginot: (i32);
@@ -111,13 +111,13 @@ Nostromo: (i32);
 	const types = sc.buildTypesList(rook, matchResult);
 
 	const mmap = new Map()
-		mmap.set('i32', {types: []})
-		mmap.set('i64', {types: []})
-		mmap.set('f32', {types: []})
-		mmap.set('f64', {types: []})
-		mmap.set('String', {types: [ 'u32' ]})
-		mmap.set('Maginot', {types: [ 'i32' ]})
-		mmap.set('Nostromo', {types: [ 'i32' ]})
+	mmap.set('i32', {types: []});
+	mmap.set('i64', {types: []});
+	mmap.set('f32', {types: []});
+	mmap.set('f64', {types: []});
+	mmap.set('String', {types: [ 'u32' ]});
+	mmap.set('Maginot', {types: [ 'i32' ]});
+	mmap.set('Nostromo', {types: [ 'i32' ]});
 	t.deepEqual(types[0], mmap);
 });
 
@@ -127,51 +127,32 @@ test.skip('Protect against Type redeclarations, and begin a little error reporti
 		i32: (i32, u32)
 		`);
 	t.assert(matchResult2.failed());
-
-	// here we're going to inspect the errors that we got from
-	// the failed parsing, and generate an error list with suggestions
-	// on how to fix it.
-	if (matchResult2.failed() == true) {
-		// console.log(matchResult2.shortMessage)
-		// console.log(matchResult2.message)
-		// console.log(matchResult2.getRightmostFailures())
-	}
-	// if matchResult.succeeded();
-	// const types = sc.buildTypesList(rook, matchResult2);
 });
 
 const crook = sc.grammar.crook;
 
-test.skip('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
-	const program = String.raw`dude: (i32, u32);
+test('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
+	const program = `dude: (i32, u32);
 whatever: i32);
+nope: (i32;
 nope: (i32);
 nope: i32);
-whatever: (55);
-`
+`;
 	const matchResult2 = rook.match(program);
 	t.assert(matchResult2.failed());
 
 	if (matchResult2.failed()) {
-		console.log("switch to crook");
+
 		const matchResult3 = crook.match(program);
 		t.assert(matchResult3.succeeded());
 
+		// test the types
 		const types = cc.buildTypesList(crook, matchResult3);
 		t.deepEqual(types.at(0).get("dude").get("types"), ['i32', 'u32']);
+		t.deepEqual(types.at(0).get("nope").get("types"), ['i32']);
 
-		// get errors
-		let errors = types.at(1);
-		for (const errs of errors) {
-			console.log("")
-			for (const err of errs) {
-				console.log(err)
-			}
-			console.log("")
-		}
-
-		// console.log(types.at(1));
-
+		// uncomment to print errors
+		// errors.print(types.at(1));
 	}
 
 });

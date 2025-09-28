@@ -1,9 +1,14 @@
 // index.js
 
 
-// makes an Error Object
-// function errorObject()
 
+
+
+// stringFromError()
+//
+// Accepts a sourceString and an index from an ohm error node,
+// Then it walks back to the beginning of the line, and forwards to the end
+// of the line to get the whole error line.
 function stringFromError(sourceString, index) {
 	let lineNumber = lineNumberFromError(sourceString, index);
 
@@ -12,7 +17,7 @@ function stringFromError(sourceString, index) {
 	// get earliest index
 	let idx = index;
 	if (idx > 1) {
-		let currentChar = ""
+		let currentChar = "";
 		while (idx > 0 && currentChar != "\n") {
 			currentChar = str.slice(idx, idx+1);
 			// console.log(`currentChar: [${idx}]:(${currentChar})`);
@@ -25,13 +30,13 @@ function stringFromError(sourceString, index) {
 		// console.log(`earliest index: ${idx}`);
 		// console.log(`(${str.slice(idx, idx+1)})`);
 	}
-	let earliest_index = idx
+	let earliest_index = idx;
 
 	// get latest index
-	idx = 18
-	let limit = 32
+	idx = index;
+	let limit = (sourceString.length - 1)
 	if (idx > 1 && idx < limit) {
-		let currentChar = ""
+		let currentChar = "";
 		while (idx < limit && currentChar != "\n") {
 			currentChar = str.slice(idx, idx+1);
 			// console.log(`currentChar: [${idx}]:(${currentChar})`);
@@ -50,6 +55,10 @@ function stringFromError(sourceString, index) {
 	return `${lineNumber}| ${error_string}`;
 }
 
+// lineNumberFromError()
+//
+// Accepts a sourceString and an index from an ohm error node,
+// Then get's the line number for that error, and drafts a string.
 function lineNumberFromError(sourceString, index) {
 	let str = sourceString;
 
@@ -72,7 +81,35 @@ function lineNumberFromError(sourceString, index) {
 	return `${lineStr}`;
 }
 
+// print()
+//
+// Prints an error. Expects an Error array. Which is an array
+// with two strings. [string, string]
+function print(errorArray) {
+	console.log("");
+	for (const errs of errorArray) {
+		for (const err of errs) {
+			console.log(err);
+		}
+		console.log("");
+	}
+}
+
+// flagError()
+//
+// flags a type redeclaration error.
+function flagError(key, info) {
+	let str = "(";
+	let prefix = "";
+	info.types.map((c) => {
+		str = str.concat(`${prefix}${c}`);
+		prefix = ", ";
+	})
+	str = str.concat(")");
+	// console.log(`Type already exists:\n  ${key}: ${str};\n`);
+}
+
 export {
-	// error,
-	stringFromError
+	stringFromError,
+	print
 }
