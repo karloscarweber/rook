@@ -5,23 +5,6 @@ const strict = String.raw`
   Rook {
 	Module = (FunctionDecl|ExternFunctionDecl|TypeDecl)*
 
-	Statement = LetStatement
-			  | IfStatement
-			  | WhileStatement
-			  | ExprStatement
-
-	//+ "let x = 3 + 4;", "let distance = 100 + 2;"
-	//- "let y;"
-	LetStatement = let identifier "=" Expr ";"
-
-	//+ "if x < 10 {}", "if z { 42; }", "if x {} else if y {} else { 42; }"
-	//- "if x < 10 { 3 } else {}"
-	IfStatement = if Expr BlockStatements (else (BlockStatements|IfStatement))?
-
-	//+ "while 0 {}", "while x < 10 { x := x + 1; }"
-	//- "while 1 { 42 }", "while x < 10 { x := x + 1 }"
-	WhileStatement = while Expr BlockStatements
-
 	//+ "func zero(): i32 { 0 }", "func add(x, y): i64 { x + y }"
 	//- "func x", "func x();"
 	FunctionDecl = func identifier "(" Params? ")" ":" identifier BlockExpr
@@ -38,7 +21,24 @@ const strict = String.raw`
 	//- "night: (i32, u32, );"
 	TypeDecl = identifier ":" "(" Params? ")" ";"
 
+	Statement = LetStatement
+			  | IfStatement
+			  | WhileStatement
+			  | ExprStatement
+
 	Params = identifier ("," identifier)*
+
+	//+ "let x = 3 + 4;", "let distance = 100 + 2;"
+	//- "let y;"
+	LetStatement = let identifier "=" Expr ";"
+
+	//+ "if x < 10 {}", "if z { 42; }", "if x {} else if y {} else { 42; }"
+	//- "if x < 10 { 3 } else {}"
+	IfStatement = if Expr BlockStatements (else (BlockStatements|IfStatement))?
+
+	//+ "while 0 {}", "while x < 10 { x := x + 1; }"
+	//- "while 1 { 42 }", "while x < 10 { x := x + 1 }"
+	WhileStatement = while Expr BlockStatements
 
 	//+ "{ 42 }", "{ 66 + 99 }", "{ 1 + 2 - 3 }"
 	//+ "{ let x = 3; 42 }"

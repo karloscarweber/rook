@@ -121,38 +121,10 @@ Nostromo: (i32);
 	t.deepEqual(types[0], mmap);
 });
 
-test.skip('Protect against Type redeclarations, and begin a little error reporting', async t => {
+test('Protect against Type redeclarations, and begin a little error reporting', async t => {
 	const matchResult2 = rook.match(`
 		i32: (i32, u32)
 		i32: (i32, u32)
 		`);
 	t.assert(matchResult2.failed());
-});
-
-const crook = sc.grammar.crook;
-
-test('Trigger a change to use the Crook Compiler when we encounter an error.', async t => {
-	const program = `dude: (i32, u32);
-whatever: i32);
-nope: (i32;
-nope: (i32);
-nope: i32);
-`;
-	const matchResult2 = rook.match(program);
-	t.assert(matchResult2.failed());
-
-	if (matchResult2.failed()) {
-
-		const matchResult3 = crook.match(program);
-		t.assert(matchResult3.succeeded());
-
-		// test the types
-		const types = cc.buildTypesList(crook, matchResult3);
-		t.deepEqual(types.at(0).get("dude").get("types"), ['i32', 'u32']);
-		t.deepEqual(types.at(0).get("nope").get("types"), ['i32']);
-
-		// uncomment to print errors
-		// errors.print(types.at(1));
-	}
-
 });

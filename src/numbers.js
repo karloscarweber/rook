@@ -20,7 +20,6 @@ function leb128(v) {
 		}
 	}
 
-	// console.log(r)
 	return r;
 }
 
@@ -43,7 +42,6 @@ function sleb128(v) {
 		}
 	}
 
-	// console.log(r)
 	return r;
 }
 

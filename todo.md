@@ -1,4 +1,11 @@
 # ToDo
-- [ ] Catch malformed type declarations and populate an error array.
+- [x] Catch malformed type declarations and populate an error array.
+- [ ] Catch redefined and circular Types.
+- [ ] Replace Type identifiers with their expanded types.
+- [ ] Flesh out small_compiler with functions and more basics.
+- [ ] Catch malformed function declarations.
 - [ ] Enable void return values for Functions.
 - [ ] Check that Functions produce a stack equal to their result type. like. If the result is i32, then we need to leave i32 on the stack. [reference](https://webassembly.github.io/spec/core/syntax/modules.html#functions)
+- [ ] Check to make sure that functions that a return void leave nothing on their stack.
+- [ ] Make an npm package for Rook
+- [ ] Test CLI of the npm package locally.

@@ -1,7 +1,9 @@
 // small_compiler.js
 import * as grammar from './grammar.js';
-import { stringToBytes, instr, magic, version } from './instructions.js'
-import { u32 } from './numbers.js'
+import { stringToBytes, instr, magic, version } from './instructions.js';
+import { u32 } from './numbers.js';
+import { grabErrorString } from './error/index.js';
+
 
 // section function
 // compiles a section
@@ -107,7 +109,9 @@ function buildTypesList(grammar, matchResult) {
 
 	// flagError:
 	// flags a type redeclaration error.
-	function flagError(key, info) {
+	function flagError(key, info, node) {
+		let errorString = grabErrorString(node)
+
 		let str = "(";
 		let prefix = "";
 		info.types.map((c) => {
@@ -115,7 +119,7 @@ function buildTypesList(grammar, matchResult) {
 			prefix = ", ";
 		})
 		str = str.concat(")");
-		// console.log(`Type already exists:\n  ${key}: ${str};\n`);
+		return `Type already exists:\n  ${key}: ${str};\n`;
 	}
 
 	// const scopes = [new Map()];
@@ -131,7 +135,7 @@ function buildTypesList(grammar, matchResult) {
 				const info = { types: childTypes };
 				const key = name.sourceString
 				if (types.has(key)) {
-					flagError(key, info);
+					flagError(key, info, name);
 				} else {
 					types.set(key, info);
 				}

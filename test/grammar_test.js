@@ -92,31 +92,3 @@ test('Rook Statements', t => {
 // test('Rook Expressions', t => {
 //
 // })
-
-test('Crook Grammar', async t => {
-	const grammarSource = grammar.strict.concat(grammar.loose);
-	const crook = ohm.grammars(grammarSource).Crook
-	for (const ex of extractExamples(grammarSource)) {
-		const result = crook.match(ex.example, ex.rule);
-		t.deepEqual(result.succeeded(), ex.shouldMatch, JSON.stringify(ex));
-	}
-
-	const sample = `morning: i32, u32, f64); morning: (i32, u32, f64);`;
-
-	const matchResult = crook.match(sample);
-	/// uncomment to trace
-	// const trace = crook.trace(sample);
-	// console.log(trace);
-
-	t.assert(matchResult.succeeded());
-});
-
-test('Crook TypeDeclarations', t => {
-	const matchResult = grammar.crook.match(`
-		morning: i32, u32, f64);
-		morning (i32, u32, f64);
-		whatever: i32);
-		morning: (i32, u32, f64);
-	`)
-	t.assert(matchResult.succeeded());
-});

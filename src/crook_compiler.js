@@ -2,7 +2,7 @@
 import * as grammar from './grammar.js';
 import { stringToBytes, instr, magic, version } from './instructions.js';
 import { u32 } from './numbers.js';
-import { stringFromError } from './error/index.js';
+import * as Errors from './error/index.js';
 
 // Crook Compiler doesn't actually spit out WebAssembly, it spits out errors.
 // purpose is to help the user as much as possible so there are no errors,
@@ -36,11 +36,11 @@ function buildTypesList(grammar, matchResult) {
 	let lineNumber = 1;
 	const errors = [];
 
-	// grabs an error string from an errored node.
-	function grabErrorString(errorNode) {
-		const errorString = stringFromError(errorNode.source.sourceString, errorNode.source.startIdx)
-		return errorString;
-	}
+	// // grabs an error string from an errored node.
+	// function grabErrorString(errorNode) {
+	// 	const errorString = stringFromError(errorNode.source.sourceString, errorNode.source.startIdx)
+	// 	return errorString;
+	// }
 
 	// const scopes = [new Map()];
 	// Operate on types
@@ -61,23 +61,23 @@ function buildTypesList(grammar, matchResult) {
 			return lastType;
 		},
 		TypeDeclNoLeftParen(tdstart, _iterAny, _rparen, _semi) {
-			const errorString = grabErrorString(_iterAny);
+			const errorString = Errors.grabErrorString(_iterAny);
 			errors.push([`missing left paren: \`(\`.`, errorString]);
 			return undefined;
 		},
 		TypeDeclNoRightParen(tdstart, _lparen, _iterAny, _semi) {
-			const errorString = grabErrorString(_iterAny);
-			errors.push([`missing right paren: \`)\`.`, errorString]);
+			const errorString = Errors.grabErrorString(_iterAny);
+			errors.push(Errors.make(`missing right paren: \`)\`.`, errorString));
 			return undefined;
 		},
 		TypeDeclNoColo(_ident, _lpar, _itparams, _rpar, _semi) {
-			const errorString = grabErrorString(_lpar);
-			errors.push([`missing colon: \`:\`.`, errorString]);
+			const errorString = Errors.grabErrorString(_lpar);
+			errors.push(Errors.make(`missing colon: \`:\`.`, errorString));
 			return undefined;
 		},
 		TypeDeclNoSemi(_ident, _lpar, params, _rpar, _any) {
-			const errorString = grabErrorString(_any);
-			errors.push([`missing semicolon: \`;\`.`, errorString]);
+			const errorString = Errors.grabErrorString(_any);
+			errors.push(Errors.make(`missing semicolon: \`;\`.`, errorString));
 			return undefined;
 		},
 		Params(ident, _, iterIdent) {

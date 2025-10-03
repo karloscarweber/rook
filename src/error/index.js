@@ -1,8 +1,4 @@
-// index.js
-
-
-
-
+// error/index.js
 
 // stringFromError()
 //
@@ -81,6 +77,23 @@ function lineNumberFromError(sourceString, index) {
 	return `${lineStr}`;
 }
 
+// grabErrorString()
+//
+// grabs an error string from an errored node.
+// Mostly wraps stringFromError
+function grabErrorString(errorNode) {
+	const errorString = stringFromError(errorNode.source.sourceString, errorNode.source.startIdx)
+	return errorString;
+}
+
+// make()
+//
+// make an error array thing.
+// An error Array, is a two member array where the first member shows an error message.
+// The second member shows the line number and the line of code where the error is.
+// [String, String]
+function make(message, line) { return [message, line]; }
+
 // print()
 //
 // Prints an error. Expects an Error array. Which is an array
@@ -111,5 +124,8 @@ function flagError(key, info) {
 
 export {
 	stringFromError,
-	print
+	print,
+	grabErrorString,
+	lineNumberFromError,
+	make
 }
