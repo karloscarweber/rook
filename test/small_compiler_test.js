@@ -111,6 +111,9 @@ Nostromo: (i32);
 	const types = sc.buildTypesList(rook, matchResult);
 
 	const mmap = new Map()
+	mmap.set('u32', {types: []});
+	mmap.set('u64', {types: []});
+	mmap.set('u128', {types: []});
 	mmap.set('i32', {types: []});
 	mmap.set('i64', {types: []});
 	mmap.set('f32', {types: []});

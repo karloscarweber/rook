@@ -1,5 +1,7 @@
-# ToDo
+# todo
 - [x] Catch malformed type declarations and populate an error array.
+- [ ] Compile Function declarations and put them into the type module.
+- [ ] Prevent redeclaration of builtin numeric types.
 - [ ] Catch redefined and circular Types.
 - [ ] Replace Type identifiers with their expanded types.
 - [ ] Flesh out small_compiler with functions and more basics.

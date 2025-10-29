@@ -94,6 +94,9 @@ function module(sections) {
 
 function buildPreludeTypes() {
 	const types = new Map();
+	types.set("u32", { types: [] });
+	types.set("u64", { types: [] });
+	types.set("u128", { types: [] });
 	types.set("i32", { types: [] });
 	types.set("i64", { types: [] });
 	types.set("f32", { types: [] });
@@ -123,13 +126,25 @@ function buildTypesList(grammar, matchResult) {
 	}
 
 	// const scopes = [new Map()];
-	// Operate on types
+
+
+	// Operation: buildTypesList
+	//
+	// This operation iterates through top level declarations
+	// and collects the data types used. Data types are aliases
+	// for the builtin in number types: i32, i64, f32, f64, and the unsigned
+	// numeric types: u32, u64, u128. (Rook assumes that i32, and i64
+	// are signed, thus we have u32, and u64.)
+	//
+	// Type information is collected in this way to replace user defined types
+	// later during compilation. Data types will expand over time.
+	//
+	// Reference: https://webassembly.github.io/spec/core/syntax/types.html
 	tempSemantics.addOperation('buildTypesList', {
 		_default(...children) {
 			return children.forEach((c) => c.buildTypesList());
 		},
 		TypeDecl(name, _colon, _lparen, optParams, _rparen, _semicolon) {
-
 			if (typeof optParams.child(0) !== "undefined" && typeof optParams.child(0) != undefined) {
 				const childTypes = optParams.child(0).buildTypesList();
 				const info = { types: childTypes };

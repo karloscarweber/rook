@@ -63,7 +63,7 @@ nope: i32);
 		t.deepEqual(types.at(0).get("nope").get("types"), ['i32']);
 
 		// uncomment to print errors
-		errors.print(types.at(1));
+		// errors.print(types.at(1));
 	}
 
 });
