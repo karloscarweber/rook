@@ -139,7 +139,9 @@ function buildTypesList(grammar, matchResult) {
 	// Type information is collected in this way to replace user defined types
 	// later during compilation. Data types will expand over time.
 	//
-	// Reference: https://webassembly.github.io/spec/core/syntax/types.html
+	// References:
+	// * https://webassembly.github.io/spec/core/syntax/types.html
+	// * https://webassembly.github.io/spec/core/appendix/index-types.html
 	tempSemantics.addOperation('buildTypesList', {
 		_default(...children) {
 			return children.forEach((c) => c.buildTypesList());
@@ -150,7 +152,7 @@ function buildTypesList(grammar, matchResult) {
 				const info = { types: childTypes };
 				const key = name.sourceString
 				if (types.has(key)) {
-					flagError(key, info, name);
+					flagError(key, info, name, "Type Redeclaration");
 				} else {
 					types.set(key, info);
 				}
@@ -166,7 +168,10 @@ function buildTypesList(grammar, matchResult) {
 		}
 	});
 	tempSemantics(matchResult).buildTypesList();
-	return [types, errors];
+	return {
+		types: types,
+		errors: errors,
+	}
 }
 
 export {

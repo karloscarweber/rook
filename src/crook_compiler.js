@@ -36,12 +36,6 @@ function buildTypesList(grammar, matchResult) {
 	let lineNumber = 1;
 	const errors = [];
 
-	// // grabs an error string from an errored node.
-	// function grabErrorString(errorNode) {
-	// 	const errorString = stringFromError(errorNode.source.sourceString, errorNode.source.startIdx)
-	// 	return errorString;
-	// }
-
 	// const scopes = [new Map()];
 	// Operate on types
 	tempSemantics.addOperation('buildTypesList', {
@@ -61,23 +55,19 @@ function buildTypesList(grammar, matchResult) {
 			return lastType;
 		},
 		TypeDeclNoLeftParen(tdstart, _iterAny, _rparen, _semi) {
-			const errorString = Errors.grabErrorString(_iterAny);
-			errors.push([`missing left paren: \`(\`.`, errorString]);
+			errors.push(Errors.make("201", _iterAny));
 			return undefined;
 		},
 		TypeDeclNoRightParen(tdstart, _lparen, _iterAny, _semi) {
-			const errorString = Errors.grabErrorString(_iterAny);
-			errors.push(Errors.make(`missing right paren: \`)\`.`, errorString));
+			errors.push(Errors.make("202", _iterAny));
 			return undefined;
 		},
 		TypeDeclNoColo(_ident, _lpar, _itparams, _rpar, _semi) {
-			const errorString = Errors.grabErrorString(_lpar);
-			errors.push(Errors.make(`missing colon: \`:\`.`, errorString));
+			errors.push(Errors.make("203", _lpar));
 			return undefined;
 		},
 		TypeDeclNoSemi(_ident, _lpar, params, _rpar, _any) {
-			const errorString = Errors.grabErrorString(_any);
-			errors.push(Errors.make(`missing semicolon: \`;\`.`, errorString));
+			errors.push(Errors.make("204", _any));
 			return undefined;
 		},
 		Params(ident, _, iterIdent) {
@@ -93,7 +83,10 @@ function buildTypesList(grammar, matchResult) {
 		}
 	});
 	tempSemantics(matchResult).buildTypesList();
-	return [types, errors];
+	return {
+		types: types,
+		errors: errors,
+	}
 }
 
 export {

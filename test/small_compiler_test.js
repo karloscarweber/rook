@@ -108,7 +108,7 @@ Nostromo: (i32);
 `);
 	t.assert(rook.match('i32: (i32, u32);').succeeded());
 	t.assert(rook.match('i32: (i32, u32)').failed());
-	const types = sc.buildTypesList(rook, matchResult);
+	const chunk = sc.buildTypesList(rook, matchResult);
 
 	const mmap = new Map()
 	mmap.set('u32', {types: []});
@@ -121,7 +121,7 @@ Nostromo: (i32);
 	mmap.set('String', {types: [ 'u32' ]});
 	mmap.set('Maginot', {types: [ 'i32' ]});
 	mmap.set('Nostromo', {types: [ 'i32' ]});
-	t.deepEqual(types[0], mmap);
+	t.deepEqual(chunk.types, mmap);
 });
 
 test('Protect against Type redeclarations, and begin a little error reporting', async t => {

@@ -1,4 +1,5 @@
 // error/index.js
+import { definitions } from './definitions.js';
 
 // stringFromError()
 //
@@ -92,7 +93,9 @@ function grabErrorString(errorNode) {
 // An error Array, is a two member array where the first member shows an error message.
 // The second member shows the line number and the line of code where the error is.
 // [String, String]
-function make(message, line) { return [message, line]; }
+function make(code, node) {
+	return [definitions[code], grabErrorString(node)];
+}
 
 // print()
 //
