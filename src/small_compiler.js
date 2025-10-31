@@ -2,7 +2,7 @@
 import * as grammar from './grammar.js';
 import { stringToBytes, instr, magic, version } from './instructions.js';
 import { u32 } from './numbers.js';
-import { grabErrorString } from './error/index.js';
+import { grabErrorString, compilerError } from './error/index.js';
 
 
 // section function
@@ -110,23 +110,7 @@ function buildTypesList(grammar, matchResult) {
 	const types = buildPreludeTypes();
 	const errors = [];
 
-	// flagError:
-	// flags a type redeclaration error.
-	function flagError(key, info, node) {
-		let errorString = grabErrorString(node)
-
-		let str = "(";
-		let prefix = "";
-		info.types.map((c) => {
-			str = str.concat(`${prefix}${c}`);
-			prefix = ", ";
-		})
-		str = str.concat(")");
-		return `Type already exists:\n  ${key}: ${str};\n`;
-	}
-
 	// const scopes = [new Map()];
-
 
 	// Operation: buildTypesList
 	//
@@ -152,7 +136,7 @@ function buildTypesList(grammar, matchResult) {
 				const info = { types: childTypes };
 				const key = name.sourceString
 				if (types.has(key)) {
-					flagError(key, info, name, "Type Redeclaration");
+					compilerError(key, info, name);
 				} else {
 					types.set(key, info);
 				}

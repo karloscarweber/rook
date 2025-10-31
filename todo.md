@@ -1,5 +1,6 @@
 # todo
 - [x] Catch malformed type declarations and populate an error array.
+- [x] Move FlagError from small_compiler.js to /error/index.js and generalize.
 - [ ] Compile Function declarations and put them into the type module.
 - [ ] Prevent redeclaration of builtin numeric types.
 - [ ] Catch redefined and circular Types.
@@ -8,6 +9,6 @@
 - [ ] Catch malformed function declarations.
 - [ ] Enable void return values for Functions.
 - [ ] Check that Functions produce a stack equal to their result type. like. If the result is i32, then we need to leave i32 on the stack. [reference](https://webassembly.github.io/spec/core/syntax/modules.html#functions)
-- [ ] Check to make sure that functions that a return void leave nothing on their stack.
+- [ ] Ensure that functions that return void leave nothing on their stack.
 - [ ] Make an npm package for Rook
 - [ ] Test CLI of the npm package locally.

@@ -97,6 +97,33 @@ function make(code, node) {
 	return [definitions[code], grabErrorString(node)];
 }
 
+// syntaxError
+//
+// Alias for make() above.
+function syntaxError(code, node) {
+	return make(code, node);
+}
+
+// typeString()
+//
+// Makes a type string from a valid type declaration line.
+function typeString(info) {
+	let str = "(";
+	let prefix = "";
+	info.types.map((c) => {
+		str = str.concat(`${prefix}${c}`);
+		prefix = ", ";
+	})
+	str = str.concat(")");
+	return str;
+}
+
+// compilerError()
+function compilerError(key, info, node) {
+	const str = typeString(info);
+	return [`Type already exists:\n  ${key}: ${str};\n`, grabErrorString(node)];
+}
+
 // print()
 //
 // Prints an error. Expects an Error array. Which is an array
@@ -130,5 +157,6 @@ export {
 	print,
 	grabErrorString,
 	lineNumberFromError,
-	make
+	make,
+	compilerError
 }
