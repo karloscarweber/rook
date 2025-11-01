@@ -15,15 +15,18 @@
     "type": "git",
     "url": "git+https://github.com/karloscarweber/rook.git"
   },
-  "devDependencies": {
-    "ava": "^6.4.1",
+  "dependencies": {
     "ohm-js": "^17.1.0"
+  },
+  "devDependencies": {
+    "ava": "^6.4.1"
   },
   "license": "MIT",
   "author": "Karl Oscar Weber <me@kow.fm>",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "lines": "git ls-files --exclude=pnpm-lock.yaml | xargs wc -l"
   }
 }
