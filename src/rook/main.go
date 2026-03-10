@@ -7,9 +7,11 @@ import (
 )
 
 func main() {
-	user, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Welcome to Rook.   >-/>\n")
+	// user, err := user.Current()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	fmt.Printf("Welcome to Rook.\n")
+	fmt.Printf("_/>\n")
+	fmt.Printf(" ^  \n")
 }
