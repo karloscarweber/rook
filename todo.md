@@ -1,4 +1,12 @@
-# todo
+# Go Rook toodo
+- [ ] Make sure that lexer catches const declarations: `const name = expression`. and that it's reflected in the tokens.
+- [ ] Capture type declarations in lexer.
+- [ ] Establish where types are expected when declaring a new type or aliasing an existing type.
+- [ ] Document Syntax in syntax test.
+- [ ] Get started on Pratt Parser.
+
+
+# old todo
 - [x] Catch malformed type declarations and populate an error array.
 - [x] Move FlagError from small_compiler.js to /error/index.js and generalize.
 - [ ] Compile Function declarations and put them into the type module.

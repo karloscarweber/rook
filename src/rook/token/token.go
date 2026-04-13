@@ -1,12 +1,14 @@
 package token
 
-type TokenType string
+type Type string
 
 // A token is a type that represents either a single caharacter or a group of
 // characters that have atomic significance in Rook.
 type Token struct {
-	Type    TokenType
+	Type    Type
 	Literal string
+	Start   int
+	Length  int
 }
 
 const (
@@ -67,7 +69,7 @@ const (
 	RETURN   = "RETURN"
 )
 
-var keywords = map[string]TokenType{
+var keywords = map[string]Type{
 	"fun":    FUNCTION,
 	"pub":    PUBLIC,
 	"type":   TYPE,
@@ -85,9 +87,13 @@ var keywords = map[string]TokenType{
 
 // looks up a keyword and returns either the keyword token or the
 // identifier token.
-func Lookup(ident string) TokenType {
+func Lookup(ident string) Type {
 	if tok, ok := keywords[ident]; ok {
 		return tok
 	}
 	return IDENT
 }
+
+// func New(tokenType Type, lit string, start int, length int) Token {
+// 	return Token{tokenType, lit, start, length}
+// }
