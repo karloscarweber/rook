@@ -14,7 +14,7 @@ import (
 type Node interface {
 	// Token is on the structs
 	String() string
-	Children []Node
+	Children() []Node
 }
 
 type Statement interface {

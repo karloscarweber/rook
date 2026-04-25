@@ -44,3 +44,5 @@ The values `5` and `2` are placed on the stack first, and then executed. So, kno
 the left side, or child is executed first.
 
 so, to figure out what we do when parsing, we start by reading the tokens: values and operators. If we first get a value and then an operator, we make an incomplete s expression: `5 + 2` -> `(sum 5 <exp>)`. An Operator has a higher precedence than an expression, so
+
+This is all pretty complicated and difficult. Really, it takes a minute to wrap your mind around the ideas being presented here.

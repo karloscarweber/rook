@@ -23,6 +23,7 @@ const (
 	INT    = "INT"
 	FLOAT  = "FLOAT"
 	STRING = "STRING"
+	BYTE   = "BYTE" // A hexadecimal number of the pattern: 0xFF
 
 	// Operators
 	ASSIGN   = "="
