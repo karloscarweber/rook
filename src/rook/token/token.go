@@ -2,6 +2,7 @@ package token
 
 import (
 	"bytes"
+	"strconv"
 )
 
 type Type string
@@ -19,15 +20,13 @@ func (tk Token) String() string {
 	var out bytes.Buffer
 
 	out.WriteString(string(tk.Type))
-	// out.WriteString(tk.Literal() + " ")
 	out.WriteString("[")
-	out.WriteString(string(tk.Start))
+	out.WriteString(strconv.Itoa(tk.Start))
 	out.WriteString(":")
-	out.WriteString(string(tk.Length))
+	out.WriteString(strconv.Itoa(tk.Length))
 	out.WriteString("] - `")
 	out.WriteString(tk.Literal)
 	out.WriteString("`")
-
 	out.WriteString("\n")
 
 	return out.String()
@@ -73,12 +72,15 @@ const (
 	SEMICOLON = ";"
 	COLON     = ":"
 
-	LPAREN   = "("
-	RPAREN   = ")"
-	LBRACE   = "{"
-	RBRACE   = "}"
-	LBRACKET = "["
-	RBRACKET = "]"
+	LPAREN      = "("
+	RPAREN      = ")"
+	LBRACE      = "{"
+	RBRACE      = "}"
+	LBRACKET    = "["
+	RBRACKET    = "]"
+	QUOTE       = "'"
+	DOUBLEQUOTE = "\""
+	BACKTICK    = "`"
 
 	// Keywords
 	FUNCTION = "FUNCTION"

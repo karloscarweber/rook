@@ -142,3 +142,51 @@ func TestNullTerminatingByte(t *testing.T) {
 	assert.Equal(t, "EOF", tokens[3].Literal, "Not the right literal")
 	assert.Equal(t, token.Type(token.EOF), tokens[3].Type, "Expecting EOF Token.")
 }
+
+func TestTokenizeStrings(t *testing.T) {
+	l := New(`let message = "Hello World" `)
+	tokens := l.Tokenize()
+
+	if 5 != len(tokens) {
+		assert.Equal(t, 5, len(tokens), "Not enough tokens.")
+		for _, tk := range tokens {
+			fmt.Printf("%s", tk.String())
+		}
+	}
+
+	assert.Equal(t, "let", tokens[0].Literal, "Not the right literal")
+	assert.Equal(t, "message", tokens[1].Literal, "Not the right literal")
+	assert.Equal(t, "=", tokens[2].Literal, "Not the right literal")
+	assert.Equal(t, `"Hello World"`, tokens[3].Literal, "Not the right literal")
+
+	l2 := New("let message = `Hello World` ")
+	tokens2 := l2.Tokenize()
+
+	if 5 != len(tokens2) {
+		assert.Equal(t, 5, len(tokens2), "Not enough tokens.")
+		for _, tk := range tokens2 {
+			fmt.Printf("%s", tk.String())
+		}
+	}
+
+	assert.Equal(t, "let", tokens2[0].Literal, "Not the right literal")
+	assert.Equal(t, "message", tokens2[1].Literal, "Not the right literal")
+	assert.Equal(t, "=", tokens2[2].Literal, "Not the right literal")
+	assert.Equal(t, "`Hello World`", tokens2[3].Literal, "Not the right literal")
+
+	l3 := New("let message = 'Hello World' ")
+	tokens3 := l3.Tokenize()
+
+	if 5 != len(tokens3) {
+		assert.Equal(t, 5, len(tokens3), "Not enough tokens.")
+		for _, tk := range tokens3 {
+			fmt.Printf("%s", tk.String())
+		}
+	}
+
+	assert.Equal(t, "let", tokens3[0].Literal, "Not the right literal")
+	assert.Equal(t, "message", tokens3[1].Literal, "Not the right literal")
+	assert.Equal(t, "=", tokens3[2].Literal, "Not the right literal")
+	assert.Equal(t, "'Hello World'", tokens3[3].Literal, "Not the right literal")
+
+}

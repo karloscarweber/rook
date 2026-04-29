@@ -13,7 +13,7 @@ type Lexer struct {
 	input        string
 	position     int // points to current char
 	readPosition int // points to after current char
-	ch           byte
+	ch           byte // the current actual character
 	Tokens       []token.Token
 }
 
@@ -151,6 +151,21 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.newToken(token.SEMICOLON, string(l.ch))
 	case ':':
 		tok = l.newToken(token.COLON, string(l.ch))
+	case '`':
+		position := l.position
+		l.consumeStrings('`')
+		lit := l.input[position:l.position]
+		return token.Token{Type: token.STRING, Literal: lit, Start: position, Length: len(lit)}
+	case '"':
+		position := l.position
+		l.consumeStrings('"')
+		lit := l.input[position:l.position]
+		return token.Token{Type: token.STRING, Literal: lit, Start: position, Length: len(lit)}
+	case '\'':
+		position := l.position
+		l.consumeStrings('\'')
+		lit := l.input[position:l.position]
+		return token.Token{Type: token.STRING, Literal: lit, Start: position, Length: len(lit)}
 	case '0':
 		if l.peek(0) == 'x' {
 			tok.Type = token.BYTE
@@ -163,13 +178,14 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	default:
 		if isLetter(l.ch) {
-			tok.Literal = l.identifier()
-			tok.Type = token.Lookup(tok.Literal)
+			position := l.position
+			lit := l.identifier()
+			tok = token.Token{Type: token.Lookup(lit), Literal: lit, Start: position, Length: len(lit)}
 			return tok
 		} else if isDigit(l.ch) {
-			// probably redundant now.
-			tok.Type = token.INT
-			tok.Literal = l.readNumber()
+			position := l.position
+			lit := l.readNumber()
+			tok = token.Token{Type: token.INT, Literal: lit, Start: position, Length: len(lit)}
 			return tok
 		} else {
 			if isWhitespace(l.ch) && l.IsAtEnd() == true {
@@ -207,7 +223,7 @@ func isHex(ch byte) bool {
 func (l *Lexer) readChar() {
 	// if we're past the end, return 0
 	if l.readPosition >= len(l.input) {
-		l.ch = 0
+		l.ch = TERMINAL
 
 		// else return a char
 	} else {
@@ -260,4 +276,42 @@ func (l *Lexer) skipWhitespace() {
 
 func isWhitespace(ch byte) bool {
 	return (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+}
+
+func (l *Lexer) consumeStrings(symbol byte) {
+	l.readChar()
+	for l.ch != symbol {
+		l.readChar()
+	}
+	l.readChar()
+}
+
+// consumes characters until we reach another Quotation mark,
+// that is not escaped.
+func (l *Lexer) consumeString() {
+	l.readChar()
+	for l.ch != '"' {
+		l.readChar()
+	}
+	l.readChar()
+}
+
+// advances char until we reach another backtick that is
+// not escaped.
+func (l *Lexer) consumeBacktickedString() {
+	l.readChar()
+	for l.ch != '`' {
+		l.readChar()
+	}
+	l.readChar()
+}
+
+// advances char until we reach another backtick that is
+// not escaped.
+func (l *Lexer) consumeSingleQuoteString() {
+	l.readChar()
+	for l.ch != '\'' {
+		l.readChar()
+	}
+	l.readChar()
 }
