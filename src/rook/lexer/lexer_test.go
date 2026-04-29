@@ -66,7 +66,6 @@ func TestGroupers(t *testing.T) {
 	assert.Equal(t, token.Type(token.EOF), tokens[6].Type, "Expecting EOF Token.")
 }
 
-
 func TestDoubles(t *testing.T) {
 	l := New(`
 ! != = == < > & && | ||
@@ -115,24 +114,19 @@ return
 	assert.Equal(t, token.Type(token.RETURN), tokens[12].Type, "Token not of the right type.")
 
 	assert.Equal(t, token.Type(token.EOF), tokens[13].Type, "Token not of the right type.")
-
 }
 
-// // Keywords
-// 	FUNCTION = "FUNCTION"
-// 	PUBLIC   = "PUBLIC"
-// 	TYPE     = "TYPE"
-// 	LET      = "LET"
-// 	CONST    = "CONST"
-// 	TRUE     = "TRUE"
-// 	FALSE    = "FALSE"
-// 	IF       = "IF"
-// 	ELSE     = "ELSE"
-// 	FOR      = "FOR"
-// 	SWITCH   = "SWITCH"
-// 	CASE     = "CASE"
-// 	RETURN   = "RETURN"
-
+func TestDelimters(t *testing.T) {
+	l := New(`
+, ; :
+`)
+	tokens := l.Tokenize()
+	assert.Equal(t, 4, len(tokens), "Not enough tokens.")
+	assert.Equal(t, token.Type(token.COMMA), tokens[0].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.SEMICOLON), tokens[1].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.COLON), tokens[2].Type, "Token not of the right type.")
+	assert.Equal(t, "EOF", tokens[3].Literal, "Not the right literal")
+}
 
 func TestNullTerminatingByte(t *testing.T) {
 	l := New(`5 + 5`)

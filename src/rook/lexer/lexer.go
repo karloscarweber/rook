@@ -145,6 +145,12 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.newToken(token.LBRACKET, string(l.ch))
 	case ']':
 		tok = l.newToken(token.RBRACKET, string(l.ch))
+	case ',':
+		tok = l.newToken(token.COMMA, string(l.ch))
+	case ';':
+		tok = l.newToken(token.SEMICOLON, string(l.ch))
+	case ':':
+		tok = l.newToken(token.COLON, string(l.ch))
 	case '0':
 		if l.peek(0) == 'x' {
 			tok.Type = token.BYTE
