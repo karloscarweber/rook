@@ -66,6 +66,26 @@ func TestGroupers(t *testing.T) {
 	assert.Equal(t, token.Type(token.EOF), tokens[6].Type, "Expecting EOF Token.")
 }
 
+
+func TestDoubles(t *testing.T) {
+	l := New(`
+! != = == < > & && | ||
+`)
+	tokens := l.Tokenize()
+	assert.Equal(t, 11, len(tokens), "Not enough tokens.")
+	assert.Equal(t, token.Type(token.BANG), tokens[0].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.NOT_EQ), tokens[1].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.ASSIGN), tokens[2].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.EQ), tokens[3].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.LT), tokens[4].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.GT), tokens[5].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.AMPERSAND), tokens[6].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.AND), tokens[7].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.PIPE), tokens[8].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.OR), tokens[9].Type, "Token not of the right type.")
+	assert.Equal(t, "EOF", tokens[10].Literal, "Not the right literal")
+}
+
 func TestNullTerminatingByte(t *testing.T) {
 	l := New(`5 + 5`)
 	tokens := l.Tokenize()

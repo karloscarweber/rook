@@ -95,7 +95,14 @@ func (l *Lexer) NextToken() token.Token {
 			tok = l.newToken(token.ASSIGN, string(l.ch))
 		}
 	case '!':
-		tok = l.newToken(token.BANG, string(l.ch))
+		if l.peek(0) == '=' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = l.newToken(token.NOT_EQ, literal)
+		} else {
+			tok = l.newToken(token.BANG, string(l.ch))
+		}
 	case '+':
 		tok = l.newToken(token.PLUS, string(l.ch))
 	case '-':
@@ -104,6 +111,28 @@ func (l *Lexer) NextToken() token.Token {
 		tok = l.newToken(token.ASTERISK, string(l.ch))
 	case '/':
 		tok = l.newToken(token.SLASH, string(l.ch))
+	case '<':
+		tok = l.newToken(token.LT, string(l.ch))
+	case '>':
+		tok = l.newToken(token.GT, string(l.ch))
+	case '&':
+		if l.peek(0) == '&' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = l.newToken(token.AND, literal)
+		} else {
+			tok = l.newToken(token.AMPERSAND, string(l.ch))
+		}
+	case '|':
+		if l.peek(0) == '|' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = l.newToken(token.OR, literal)
+		} else {
+			tok = l.newToken(token.PIPE, string(l.ch))
+		}
 	case '(':
 		tok = l.newToken(token.LPAREN, string(l.ch))
 	case ')':

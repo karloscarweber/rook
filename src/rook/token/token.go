@@ -65,6 +65,9 @@ const (
 	AND = "&&"
 	OR  = "||"
 
+	AMPERSAND = "&"
+	PIPE      = "|"
+
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
