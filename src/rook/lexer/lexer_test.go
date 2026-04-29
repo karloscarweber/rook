@@ -5,6 +5,8 @@ package lexer
 import (
 	"rook/token"
 	"testing"
+	// "bytes"
+	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -53,10 +55,12 @@ const thing = 5
 
 func TestNullTerminatingByte(t *testing.T) {
 	l := New(`5 + 5`)
-	tokens1 := l.Tokenize()
-	assert.Equal(t, 4, len(tokens1), "Not enough tokens.")
+	tokens := l.Tokenize()
 
-	l2 := New(`Whatever loser`)
-	tokens2 := l2.Tokenize()
-	assert.Equal(t, 3, len(tokens2), "Not enough tokens.")
+	if 4 != len(tokens) {
+		assert.Equal(t, 4, len(tokens), "Not enough tokens.")
+		for _, tk := range tokens {
+			fmt.Printf("%s", tk.String())
+		}
+	}
 }

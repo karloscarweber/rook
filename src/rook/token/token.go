@@ -1,5 +1,9 @@
 package token
 
+import (
+	"bytes"
+)
+
 type Type string
 
 // A token is a type that represents either a single caharacter or a group of
@@ -10,6 +14,25 @@ type Token struct {
 	Start   int
 	Length  int
 }
+
+func (tk Token) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(string(tk.Type))
+	// out.WriteString(tk.Literal() + " ")
+	out.WriteString("[")
+	out.WriteString(string(tk.Start))
+	out.WriteString(":")
+	out.WriteString(string(tk.Length))
+	out.WriteString("] - `")
+	out.WriteString(tk.Literal)
+	out.WriteString("`")
+
+	out.WriteString("\n")
+
+	return out.String()
+}
+
 
 const (
 	ERROR = "ERROR"

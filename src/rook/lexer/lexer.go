@@ -4,6 +4,8 @@ package lexer
 
 import (
 	"rook/token"
+	"rook/stack"
+
 )
 
 // Lexer
@@ -16,37 +18,32 @@ type Lexer struct {
 	Tokens       []token.Token
 }
 
+const TERMINAL = '\x00'
+
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	// we call readChar here to put the Lexer in it's default state.
-	l.stripTrailingWhitespace()
-	l.ensureTerminalByte()
+	l.normalizeTerminal()
 	l.readChar()
 	return l
 }
 
-func (* Lexer) stripTrailingWhitespace() {
-	str := []byte(l.input)
-	last := len(str) -1
-	lastCh := str[last]
-}
+// *Lexer.NormalizeTerminal()
+//
+// investigates the end of the provided code snippet and ensures
+// that it ends as expected with a newline and a terminal byte.
+func (l *Lexer) normalizeTerminal() {
+	bt := []byte(l.input)
+	s := stack.Stack(bt)
 
-func (l *Lexer) ensureTerminalByte() {
-	str := []byte(l.input)
-	last := len(str) - 1
-	lastCh := str[last]
-
-	if lastCh != 0 {
-		str := []byte(l.input)
-		str = append(str, 0)
-		l.input = string(str)
+	lastCh := s[(len(s) - 1)]
+	if lastCh != TERMINAL {
+		s = append(s, TERMINAL)
 	}
-}
-
-// should trim the trailing whitespace,
-// or we should redesign this thing so that trailing whitespace doesn't trip it up.
-func (l *Lexer) trimTrailingWhitespace() {
-
+	if s[(len(s) - 2)] != byte('\n') {
+		s = append(s, byte('\n'))
+	}
+	l.input = string(s)
 }
 
 func (l *Lexer) peekChar() byte {
@@ -88,7 +85,7 @@ func (l *Lexer) newToken(tokenType token.Type, lit string) token.Token {
 }
 
 func (l *Lexer) NextToken() token.Token {
-	var tok token.Token
+	var tok = l.newToken(token.EOF, "EOF")
 
 	l.skipWhitespace()
 
@@ -170,7 +167,7 @@ func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
 
-		// else return an char
+		// else return a char
 	} else {
 		l.ch = l.input[l.readPosition]
 	}
