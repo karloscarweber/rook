@@ -5,7 +5,6 @@ package lexer
 import (
 	"rook/token"
 	"rook/stack"
-
 )
 
 // Lexer
@@ -22,8 +21,8 @@ const TERMINAL = '\x00'
 
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
-	// we call readChar here to put the Lexer in it's default state.
 	l.normalizeTerminal()
+	// we call readChar here to put the Lexer in it's default state.
 	l.readChar()
 	return l
 }
@@ -44,10 +43,6 @@ func (l *Lexer) normalizeTerminal() {
 		s = append(s, byte('\n'))
 	}
 	l.input = string(s)
-}
-
-func (l *Lexer) peekChar() byte {
-	return l.peek(0)
 }
 
 // peeks an arbitrary length.
@@ -91,7 +86,7 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch l.ch {
 	case '=':
-		if l.peekChar() == '=' {
+		if l.peek(0) == '=' {
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
@@ -110,7 +105,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '/':
 		tok = l.newToken(token.SLASH, string(l.ch))
 	case '0':
-		if l.peekChar() == 'x' {
+		if l.peek(0) == 'x' {
 			tok.Type = token.BYTE
 			tok.Literal = l.readByte()
 			return tok

@@ -5,9 +5,7 @@ package lexer
 import (
 	"rook/token"
 	"testing"
-	// "bytes"
 	"fmt"
-
 	"github.com/stretchr/testify/assert"
 )
 
