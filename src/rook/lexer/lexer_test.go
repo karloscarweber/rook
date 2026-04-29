@@ -86,6 +86,54 @@ func TestDoubles(t *testing.T) {
 	assert.Equal(t, "EOF", tokens[10].Literal, "Not the right literal")
 }
 
+func TestKeywords(t *testing.T) {
+	l := New(`
+fun   pub    type   let
+const true   false  if
+else  for    switch case
+return
+`)
+
+	tokens := l.Tokenize()
+	assert.Equal(t, 14, len(tokens), "Not enough tokens.")
+
+	assert.Equal(t, token.Type(token.FUNCTION), tokens[0].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.PUBLIC), tokens[1].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.TYPE), tokens[2].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.LET), tokens[3].Type, "Token not of the right type.")
+
+	assert.Equal(t, token.Type(token.CONST), tokens[4].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.TRUE), tokens[5].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.FALSE), tokens[6].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.IF), tokens[7].Type, "Token not of the right type.")
+
+	assert.Equal(t, token.Type(token.ELSE), tokens[8].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.FOR), tokens[9].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.SWITCH), tokens[10].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.CASE), tokens[11].Type, "Token not of the right type.")
+
+	assert.Equal(t, token.Type(token.RETURN), tokens[12].Type, "Token not of the right type.")
+
+	assert.Equal(t, token.Type(token.EOF), tokens[13].Type, "Token not of the right type.")
+
+}
+
+// // Keywords
+// 	FUNCTION = "FUNCTION"
+// 	PUBLIC   = "PUBLIC"
+// 	TYPE     = "TYPE"
+// 	LET      = "LET"
+// 	CONST    = "CONST"
+// 	TRUE     = "TRUE"
+// 	FALSE    = "FALSE"
+// 	IF       = "IF"
+// 	ELSE     = "ELSE"
+// 	FOR      = "FOR"
+// 	SWITCH   = "SWITCH"
+// 	CASE     = "CASE"
+// 	RETURN   = "RETURN"
+
+
 func TestNullTerminatingByte(t *testing.T) {
 	l := New(`5 + 5`)
 	tokens := l.Tokenize()
