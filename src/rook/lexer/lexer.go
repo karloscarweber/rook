@@ -40,7 +40,8 @@ func (l *Lexer) normalizeTerminal() {
 		s = append(s, TERMINAL)
 	}
 	if s[(len(s) - 2)] != byte('\n') {
-		s = append(s, byte('\n'))
+		s = append(s, TERMINAL)
+		s = s.Insert((len(s) - 2), byte('\n'))
 	}
 	l.input = string(s)
 }
@@ -56,7 +57,7 @@ func (l *Lexer) peek(position int) byte {
 }
 
 func (l *Lexer) IsAtEnd() bool {
-	if l.readPosition >= len(l.input) {
+	if l.readPosition > len(l.input) {
 		return true
 	}
 	return false
@@ -203,6 +204,7 @@ func (l *Lexer) identifier() string {
 	for isLetter(l.ch) {
 		l.readChar()
 	}
+
 	return l.input[position:l.position]
 }
 
@@ -224,7 +226,6 @@ func (l *Lexer) readChar() {
 	// if we're past the end, return 0
 	if l.readPosition >= len(l.input) {
 		l.ch = TERMINAL
-
 		// else return a char
 	} else {
 		l.ch = l.input[l.readPosition]

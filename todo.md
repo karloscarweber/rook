@@ -1,11 +1,17 @@
-# Go Rook toodo
-- [ ] Make sure that lexer catches const declarations: `const name = expression`. and that it's reflected in the tokens.
-- [ ] Make sure the lexer does not capture trailing whitespaces.
-- [ ] Capture type declarations in lexer.
+# Go Rook todo
+- [x] Make sure that lexer catches const declarations: `const name = expression`. and that it's reflected in the tokens.
+- [x] Make sure the lexer does not capture trailing whitespaces.
+- [x] Capture type declarations in lexer.
+- [-] Build AST and Establish basic syntax.
+  - [x] Modules
+  - [ ] Types
+  - [ ] Functions (Types)
+  - [ ] Declarations (kinda covered above)
+  - [ ] Expressions
+  - [ ] Value Literals
 - [ ] Establish where types are expected when declaring a new type or aliasing an existing type.
 - [ ] Document Syntax in syntax test.
-- [ ] Get started on Pratt Parser.
-
+- [x] Get started on Pratt Parser.
 
 # old todo
 - [x] Catch malformed type declarations and populate an error array.

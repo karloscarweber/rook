@@ -87,33 +87,34 @@ func TestDoubles(t *testing.T) {
 
 func TestKeywords(t *testing.T) {
 	l := New(`
-fun   pub    type   let
-const true   false  if
-else  for    switch case
-return
+case   const   else    false
+for    fun     if      let
+mod    pub     return  switch
+true   type
 `)
 
 	tokens := l.Tokenize()
-	assert.Equal(t, 14, len(tokens), "Not enough tokens.")
+	assert.Equal(t, 15, len(tokens), "Wrong number of tokens.")
 
-	assert.Equal(t, token.Type(token.FUNCTION), tokens[0].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.PUBLIC), tokens[1].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.TYPE), tokens[2].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.LET), tokens[3].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.CASE), tokens[0].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.CONST), tokens[1].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.ELSE), tokens[2].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.FALSE), tokens[3].Type, "Token not of the right type.")
 
-	assert.Equal(t, token.Type(token.CONST), tokens[4].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.TRUE), tokens[5].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.FALSE), tokens[6].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.IF), tokens[7].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.FOR), tokens[4].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.FUNCTION), tokens[5].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.IF), tokens[6].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.LET), tokens[7].Type, "Token not of the right type.")
 
-	assert.Equal(t, token.Type(token.ELSE), tokens[8].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.FOR), tokens[9].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.SWITCH), tokens[10].Type, "Token not of the right type.")
-	assert.Equal(t, token.Type(token.CASE), tokens[11].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.MODULE), tokens[8].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.PUBLIC), tokens[9].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.RETURN), tokens[10].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.SWITCH), tokens[11].Type, "Token not of the right type.")
 
-	assert.Equal(t, token.Type(token.RETURN), tokens[12].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.TRUE), tokens[12].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.TYPE), tokens[13].Type, "Token not of the right type.")
 
-	assert.Equal(t, token.Type(token.EOF), tokens[13].Type, "Token not of the right type.")
+	assert.Equal(t, token.Type(token.EOF), tokens[14].Type, "Token not of the right type.")
 }
 
 func TestDelimters(t *testing.T) {
@@ -188,5 +189,4 @@ func TestTokenizeStrings(t *testing.T) {
 	assert.Equal(t, "message", tokens3[1].Literal, "Not the right literal")
 	assert.Equal(t, "=", tokens3[2].Literal, "Not the right literal")
 	assert.Equal(t, "'Hello World'", tokens3[3].Literal, "Not the right literal")
-
 }

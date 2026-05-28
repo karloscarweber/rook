@@ -83,6 +83,7 @@ const (
 	BACKTICK    = "`"
 
 	// Keywords
+	MODULE   = "MODULE"
 	FUNCTION = "FUNCTION"
 	PUBLIC   = "PUBLIC"
 	TYPE     = "TYPE"
@@ -99,6 +100,7 @@ const (
 )
 
 var keywords = map[string]Type{
+	"mod":    MODULE,
 	"fun":    FUNCTION,
 	"pub":    PUBLIC,
 	"type":   TYPE,
