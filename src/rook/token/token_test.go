@@ -40,6 +40,10 @@ func TestKeywordLookup(t *testing.T) {
 		"Expecting 'case' Token.")
 	assert.Equal(t, Type(RETURN), Lookup("return"),
 		"Expecting 'return' Token.")
+	assert.Equal(t, Type(EXTERN), Lookup("extern"),
+		"Expecting 'extern' Token.")
+	assert.Equal(t, Type(WHILE), Lookup("while"),
+		"Expecting 'while' Token.")
 }
 
 func TestIdentifierLookup(t *testing.T) {

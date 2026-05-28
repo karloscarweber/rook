@@ -97,10 +97,12 @@ const (
 	SWITCH   = "SWITCH"
 	CASE     = "CASE"
 	RETURN   = "RETURN"
+	WHILE    = "WHILE"
+	EXTERN   = "EXTERN"
 )
 
 var keywords = map[string]Type{
-	"module":    MODULE,
+	"module": MODULE,
 	"fun":    FUNCTION,
 	"pub":    PUBLIC,
 	"type":   TYPE,
@@ -114,6 +116,8 @@ var keywords = map[string]Type{
 	"switch": SWITCH,
 	"case":   CASE,
 	"return": RETURN,
+	"while":  WHILE,
+	"extern": EXTERN,
 }
 
 // looks up a keyword and returns either the keyword token or the
