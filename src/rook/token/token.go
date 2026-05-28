@@ -100,7 +100,7 @@ const (
 )
 
 var keywords = map[string]Type{
-	"mod":    MODULE,
+	"module":    MODULE,
 	"fun":    FUNCTION,
 	"pub":    PUBLIC,
 	"type":   TYPE,

@@ -103,9 +103,11 @@ func (p *Parser) registerInfixFunc(tokenType token.Type, fn infixFn) {
 //
 // advances the current and peek token forward.
 func (p *Parser) advance() {
-	p.position = p.position + 1
-	p.current = p.peek
-	p.peek = p.lexer.Tokens[p.position]
+	if !p.isAtEnd() {
+		p.position = p.position + 1
+		p.current = p.peek
+		p.peek = p.lexer.Tokens[p.position]
+	}
 }
 
 // *Parser.Parse()

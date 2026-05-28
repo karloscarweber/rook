@@ -72,6 +72,12 @@ func (l *Lexer) Tokenize() []token.Token {
 		l.Tokens = append(l.Tokens, token.Token{Type: token.EOF, Literal: "EOF", Start: len(l.input), Length: len("EOF")})
 	}
 
+	length := len(l.Tokens)
+
+	if l.Tokens[length-1].Type == token.EOF && l.Tokens[length-2].Type == token.EOF {
+		l.Tokens = l.Tokens[:len(l.Tokens)-1]
+	}
+
 	return l.Tokens
 }
 

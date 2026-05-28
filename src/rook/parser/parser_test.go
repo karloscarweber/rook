@@ -10,7 +10,7 @@ import (
 
 func TestParserNew(t *testing.T) {
 
-	p := New("mod rook")
+	p := New("module rook")
 	p.Parse()
 
 	// tokens := l.Tokenize()

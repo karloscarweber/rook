@@ -89,7 +89,7 @@ func TestKeywords(t *testing.T) {
 	l := New(`
 case   const   else    false
 for    fun     if      let
-mod    pub     return  switch
+module pub     return  switch
 true   type
 `)
 
@@ -179,7 +179,7 @@ func TestTokenizeStrings(t *testing.T) {
 	tokens3 := l3.Tokenize()
 
 	if 5 != len(tokens3) {
-		assert.Equal(t, 5, len(tokens3), "Not enough tokens.")
+		assert.Equal(t, 5, len(tokens3), "Wrong number of tokens.")
 		for _, tk := range tokens3 {
 			fmt.Printf("%s", tk.String())
 		}

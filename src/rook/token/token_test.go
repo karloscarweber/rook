@@ -12,6 +12,8 @@ func TestSomething(t *testing.T) {
 }
 
 func TestKeywordLookup(t *testing.T) {
+	assert.Equal(t, Type(MODULE), Lookup("module"),
+		"Expecting 'module' Token.")
 	assert.Equal(t, Type(FUNCTION), Lookup("fun"),
 		"Expecting 'fun' Token.")
 	assert.Equal(t, Type(PUBLIC), Lookup("pub"),
